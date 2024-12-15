@@ -7,16 +7,29 @@ For the need of exercice we emulate our alpine on a debian machine (aka host).
 
 Previously, you need 
     On host : 
+        Install : `sudo apt install bc binutils bison dwarves flex gcc git gnupg2 gzip libelf-dev libncurses5-dev libssl-dev make openssl pahole perl-base rsync tar xz-utils parted`
         Download Linux Kernel : `wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.10.tar.gz`
         Unzip it : `tar -xvf linux-6.10.tar.gz`
-        Assume to have the following tree :
-            tree
+        Assume to have the following tree on root folder :
+            .
+            └── root
+                ├── Dockerfile
+                ├── kill.sh
+                ├── linux-6.10
+                ├── modules
+                │   ├── Makefile
+                │   └── rootkit.c
+                ├── script.sh
+                └── UserGuide.md
+
     On C2 : 
-        Install : netcat
+        Check if netcat is up to date
 
 In our C2 we have installed : netcat
 
 On the host, run script.sh file with :
+> chmod +x script.sh
+> chmod +x kill.sh
 > sh script.sh
 To create the quemu alpine.
 

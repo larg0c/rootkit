@@ -1,4 +1,4 @@
-obj-m += rootkit.o
+obj-m += rv.o
 
 PWD := $(CURDIR)
 
